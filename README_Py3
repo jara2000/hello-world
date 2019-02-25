@@ -1,0 +1,789 @@
+Python 3
+
+Required Software Packages, Tools, and Files:
+ git, wget, which, words (need file at /usr/share/dict/words)
+ lsof, text editor of your choice, python 3.6.5
+
+
+ 
+1. Installing Packages
+The following commands are used on the cloud server to install the packages and files that we need. 
+  $ sudo su -
+  # yum update
+  # yum groupinstall -y "development tools"
+  # yum install -y lsof wget vim-enhanced words which htop
+  # exit
+  $
+  
+2. Configuring Git
+From our user account (instead of root):
+
+  $ git config --global user.name "Jeff Avendano"
+  $ git config --global user.email "jara2000@gmail.com.com"
+
+
+
+3. Customizing Bash
+Downloading a bashrc file from the Linuxacademy "GitHub repository" and place it in your $HOME directory. 
+This command will download the file, rename it, and place it in the proper directory:
+
+Linuxacademy GitHub repository -> https://github.com/linuxacademy/content-python3-sysadmin
+
+ $ curl https://raw.githubusercontent.com/linuxacademy/content-python3-sysadmin/master/helpers/bashrc -o ~/.bashrc
+   
+
+4. Customizing Vim  ,.. Like was done for bashrc above.
+
+  $ curl https://raw.githubusercontent.com/linuxacademy/content-python3-sysadmin/master/helpers/vimrc -o ~/.vimrc
+    
+ 
+
+5. Create the GIT repo in your $HOME :
+
+   $ mkdir sample ; cd sample
+   sample $ touch file.txt
+   
+   sample $ git init   			<-- turn directory into a Git repository
+   Initialized empty Git repository in /home/cloud_user/sample/.git/
+   
+   sample $ git add --all .		<-- means add every file that's underneath my current directory
+   
+   sample $ git status			<-- we have a new file "file.txtx" that hasn't been committed yet...
+   # On branch master
+   #
+   # Initial commit
+   #
+   # Changes to be committed:
+   #   (use "git rm --cached <file>..." to unstage)
+   #
+   #       new file:   file.txt
+   #
+   sample $
+   
+   
+   
+  sample $ git commit -m 'Added new file'
+	[master (root-commit) a4dcc97] Added new file
+	1 file changed, 0 insertions(+), 0 deletions(-)
+	create mode 100644 file.txt
+  sample[master] $
+
+
+So now we have setup our Cloud server and installed some tools for our development purposes!
+We will next install Python which we will compile from source and go from there.
+
+
+
+
+
+
+
+Lecture: Installing Python 3 on CentOS 7
+========================================
+
+Download and Install Python 3 from Source
+
+Here are the commands that we.ll run to build and install Python 3:
+
+[root] $ yum install -y libffi-devel zlib-devel bzip2-devel openssl-devel \
+ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel \
+libpcap-devel xz-devel expat-devel
+
+
+Goto: http://python.org  
+		>> Downloads  
+		 >> Source code 
+		  >> and select the "Gzipped source tarball" version you want (Copy link address)
+
+		  
+		  
+[root ] $ cd /usr/src
+[root ] $ wget https://www.python.org/ftp/python/3.6.4/Python-3.6.4.tgz
+[root ] $ tar xf Python-3.6.4.tgz
+[root ] $ cd Python-3.6.4
+[root ] $ ./configure --enable-optimizations
+[root ] $ make altinstall						<-- Very important, this will not overwrite the built in python 
+[root ] $ exit										Py2.x executable. It will create a new Py3 executable!
+			back to regular user,..
+
+Ensure that secure_path in /etc/sudoers file includes /usr/local/bin
+
+
+
+
+Upgrade Pip (Might not be Necessary)
+The version of pip that we have might be up-to-date, but it.s good practice to try to 
+update it after the installation. We need to use the pip3.6 executable because we.re 
+working with Python 3, and we use sudo so that we can write files under the /usr/local directory.
+
+
+	$ sudo pip3.6 install --upgrade pip		<-- Pip is the package manager used when working with Python
+	
+
+
+	
+
+	
+	
+Lecture: History & Benefits of Python
+=====================================
+
+Python 3 - 2008
+
+Key Points About Python:
+
+Object-Oriented Scripting Language.
+
+Dynamic & strong typing system.
+	Dynamic types are checked at runtime
+	Strong types don.t change implicitly, can.t add 1 and "something".
+	
+Supports functional concepts like "map, reduce, filter" and list comprehension.
+
+Whitespace delimited (no { or } around code blocks)
+
+Pseudo-code like syntax
+
+Extremely popular language used across many different disciplines (academia, data science, 
+scripting, web development, etc.).
+
+Large open source community and public package index (Pypi).
+
+Runs on all major operating systems (historically more of a pain to run on Windows than 
+Unix systems). Pre-installed on most *NIX systems (usually Python 2).
+
+Supported by large companies such as Google & YouTube.
+
+Consistently high on the Tiobe Index (one of the most searched programming languages). 
+4th as of the time of recording this.
+
+Placed in the Stack Overflow Developer Survey.s top 10 for Most Popular Programming Languages, 
+Most Loved Programming Languages, and placed number 1 as the .Most Wanted Language. (meaning 
+it.s the language that developers want to use the most).
+
+
+
+
+
+
+
+Lecture: What's the Deal with Python 3?
+=======================================
+
+ https://wiki.python.org/moin/Python2orPython3
+
+ https://docs.python.org/3/whatsnew/3.0.html
+
+
+
+
+ 
+ 
+Lecture: Introducing the REPL for Rapid Experimentation 
+=======================================================
+
+REPL stands for: Read, Evaluate, Print, Loop 
+
+$ python3.6
+Python 3.6.4 (default, Feb 24 2019, 19:20:58)
+[GCC 4.8.5 20150623 (Red Hat 4.8.5-36)] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>>
+
+
+to exit the REPL, you can either type:
+ exit() 		, or you can hit 
+ Ctrl+d
+
+
+
+
+
+
+Lecture:  Creating and Running Python Scripts
+=============================================
+
+$ vim hello.py
+print('Hello World!')
+
+$ python3.6 hello.py
+Hello World!
+
+or 
+
+$ vim hello.py
+ #!/usr/local/bin/python3.6					<-> #!/usr/bin/env python3.6   <- this line from lab didn't work !!
+ print('Hello World!')
+
+$ chmod u+x hello.py
+$ ./hello.py
+Hello World!
+
+							<-- create $HOME/bin and put scripts there
+$ mkdir bin
+$ mv hello.py ~/bin/
+$ export PATH=$HOME/bin:$PATH	<-- add $HOME/bin to your $PATH from CKLI or in .bashrc
+$ hello.py
+Hello World!
+
+====================
+Lets put our Timezone instead of using UTC
+
+$ sudo timedatectl list-timezones
+$ sudo timedatectl set-timezone America/New_York
+$ timedatectl 
+====================
+
+
+
+
+
+
+
+Lecture: Using Comments
+=======================
+
+"""
+This is a string 
+and it take multiple lines
+"""
+
+
+
+
+
+
+	==========================
+	==========================
+	|	 Common Data Types 	  |
+	==========================
+	==========================
+
+
+Lecture: Strings   
+----------------
+ https://docs.python.org/3/library/stdtypes.html#text-sequence-type-str
+
+
+A string is an object.
+	1. An object can have a state
+	2. An object can hold on to some behaviour that it can use, this behaviour on objects refers to 
+	   functions that are attached to the object itself and these are called methods.
+
+Some Methods:	.find    .lower   .upper
+   
+examples:
+	>>> "double".find('s')      here we call a method on the string double ( . )
+	-1							<-- false
+	>>> "double".find('l')
+	4
+	>>> "double".find('e')
+	5
+	>>> "double".find('d')
+	0
+	>>>
+	>>> "TeSting".lower()		<-- calling the method "lower"
+	'testing'
+	>>> 'Password123'.lower()
+	'password123'
+	>>>
+	>>> 'Ha' * 4				<-- arithmetic operators + and *
+	'HaHaHaHa'
+	>>>
+
+special chars:   \t     \n    ""   ''    \  <-Esc
+	>>> print('Hey\tYou')
+	Hey     You
+	>>> 'Hey\tYou'
+	'Hey\tYou'
+	>>>
+	>>> print('Hey\nYou')
+	Hey
+	You
+	>>>
+	>>> print('Hey\\You')
+	Hey\You
+	>>>
+	>>> print("'Hey' you 'what are'")
+	'Hey' you 'what are'
+	>>>
+	>>> print('"Hey" you "what are"')
+	"Hey" you "what are"
+
+	>>> print('Your's is awesome')			
+	File "<stdin>", line 1					<-- yup! need to Esc it with a \
+1		print('Your's is awesome')
+					^
+	SyntaxError: invalid syntax
+	
+	>>> print('Your\'s is awesome')			<-- now it works!
+	Your's is awesome
+	>>>
+
+	
+	
+	
+
+Lecture: Numbers (int and float)	
+--------------------------------
+  https://docs.python.org/3/library/stdtypes.html#numeric-types-int-float-complex
+  
+  +  /  -  *  %   //   **
+
+str   int   float
+
+Operation		Result
+--------------  -------------------------------------
+x + y			sum of x and y	 	 
+x - y			difference of x and y	 	 
+x * y			product of x and y	 	 
+x / y			quotient of x and y	 	 
+x // y			floored quotient of x and y 
+x % y			remainder of x / y
+-x				x negated	 	 
++x				x unchanged	 	 
+abs(x)			absolute value or magnitude of x
+int(x)			x converted to integer
+float(x)		x converted to floating point
+complex(re, im)	a complex number with real part re,1
+				imaginary part im. im defaults to zero.
+c.conjugate()	conjugate of the complex number c	 	 
+divmod(x, y)	the pair (x // y, x % y)
+pow(x, y)		x to the power y
+x ** y			x to the power y
+
+
+
+
+
+Lecture: Booleans and None
+--------------------------
+  https://docs.python.org/3/library/stdtypes.html#truth-value-testing
+	
+	True  	False   None
+	^		^		^
+	
+	>>> type(True)
+	<class 'bool'>
+	>>>
+	>>> bool({})
+	False
+	>>>
+	>>> bool("")
+	False
+	>>> bool("Jeff")
+	True
+	>>>
+
+	>>> None
+	>>>
+
+
+	
+
+Lecture: Working with Variables
+-------------------------------
+
+	>>> my_str = "This is a simple string"
+	>>> my_str
+	'This is a simple string'
+	>>> print(my_str)
+	This is a simple string
+	>>>
+	>>> my_str += " testing"
+	>>> my_str
+	'This is a simple string testing'
+	>>>
+	>>> my_str = my_str + " testing"
+	>>> my_str
+	'This is a simple string testing testing'
+	>>>
+	
+	
+
+	
+Lecture: Lists
+--------------
+
+ [ ]  .append    .remove    .pop
+
+Sequence Types . list, tuple, range:
+  https://docs.python.org/3/library/stdtypes.html#sequence-types-list-tuple-range  
+  
+Lists
+  https://docs.python.org/3/library/stdtypes.html#list
+
+	>>> my_list = [1, 2, 3, 4, 5]
+	>>> len(my_list)
+	5
+	
+	>>> my_list[0:2]
+	[1, 2]
+	>>> my_list[:3]
+	[1, 2, 3]
+	>>> my_list[0::1]
+	[1, 2, 3, 4, 5]
+	>>> my_list[0::2]
+	[1, 3, 5]
+  
+Change a value in a list using the subscript equals operation: 
+	>>> my_list[0] = "a"
+	>>> my_list
+	['a', 2, 3, 4, 5]
+
+Example of a method that modifies the object that is calling the method:
+	>>> my_list.append(6)
+	>>> my_list.append(7)
+	>>> my_list
+	['a', 2, 3, 4, 5, 6, 7]	
+
+Lists can be added together (concatenated): 	
+	>>> my_list + [8, 9, 10]
+	['a', 2, 3, 4, 5, 6, 7, 8, 9, 10]
+	>>> my_list
+	['a', 2, 3, 4, 5, 6, 7]
+	>>> my_list += [8, 9, 10]
+	>>> my_list
+	['a', 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+Items in lists can be set using slices also: 
+	>>> my_list[1:3] = ['b', 'c']
+	>>> my_list
+	['a', 'b', 'c', 4, 5, 6, 7, 8, 9, 10]
+	
+Removing items from a list based on value can be done using the .remove method: 
+	>>> my_list.remove('b')
+	>>> my_list
+	['a', 'c', 4, 5, 6, 7, 8, 9, 10]
+	
+Items can also be removed from the end of a list using the pop method: 
+	>>> my_list = ['a', 'c', 'd']
+	>>> my_list
+	['a', 'c', 'd']
+	>>> my_list.pop()
+	'd'
+	>>> my_list
+	['a', 'c']
+
+We can also use the pop method to remove items at a specific index: 
+	>>> my_list.pop(0)
+	'a'
+	>>> my_list
+	['c']
+	
+
+
+
+Lecture: Tuples
+---------------
+
+Sequence Types . list, tuple, range
+	https://docs.python.org/3/library/stdtypes.html#sequence-types-list-tuple-range
+
+Tuples
+	https://docs.python.org/3/library/stdtypes.html#tuple
+	
+	
+	>>> point = (2.0, 3.0)
+	>>> point_3d = point + (4.0,)
+	>>> point_3d
+	(2.0, 3.0, 4.0)
+
+	>>> x, y, z = point_3d
+	>>> x
+	2.0
+	>>> y
+	3.0
+	>>> z
+	4.0
+
+More common in Python 2:	
+	>>> print("My name is: %s %s" % ("Jeff", "Avendano"))
+	My name is: Jeff Avendano
+
+
+
+	
+	
+Lecture: Dictionaries (dicts)
+-----------------------------
+
+Dictionary
+	https://docs.python.org/3/library/stdtypes.html#mapping-types-dict	
+
+
+We create dictionary literals by using curly braces ({ and }), separating keys 
+from values using colons (:), and separating key/value pairs using commas (,). 
+
+
+	>>> ages = {'jeff': 25, 'jane': 21, 'tom': 29}
+	>>> ages
+	{'jeff': 25, 'jane': 21, 'tom': 29}
+	>>>
+	>>> ages['tom']
+	29
+	>>> ages['kayla'] = 21
+	>>> ages
+	{'jeff': 25, 'jane': 21, 'tom': 29, 'kayla': 21}
+	>>> ages['kayla'] = 52
+	>>> ages
+	{'jeff': 25, 'jane': 21, 'tom': 51, 'kayla': 52}
+	
+	
+Remove keys with "pop" method:
+	>>> ages.pop('tom')
+	51
+	>>> ages
+	{'jeff': 25, 'jane': 21, 'kayla': 23}
+	
+	>>> ages.keys()
+	dict_keys(['jeff', 'jane', 'kayla'])
+	>>> list(ages.keys())
+	['jeff', 'jane', 'kayla']
+	
+	>>> ages.values()
+	dict_values([25, 21, 23])
+	
+	>>> list(ages.values())
+	[25, 21, 23]
+
+Using dict: 
+	>>> weights = dict(kevin=160, bob=240, kayla=135)
+	>>> weights
+	{'kevin': 160, 'bob': 240, 'kayla': 135}
+
+	>>> colors = dict([('kevin', 'blue'), ('bob', 'green'), ('kayla', 'red')])
+	>>> colors
+	{'kevin': 'blue', 'bob': 'green', 'kayla': 'red'}
+
+
+
+	
+
+Lecture: Conditionals and Comparisons
+-------------------------------------
+	
+Comparisons
+	https://docs.python.org/3/library/stdtypes.html#comparisons
+	
+if/elif/else
+	https://docs.python.org/3/tutorial/controlflow.html#if-statements
+	
+
+	
+ "if"  will always be True or False
+  
+	>>> if False:
+	...     print('was true')
+	... else:
+	...     print('was false')
+	...
+	was false
+
+	
+	>>> name = "Jefferson"
+	>>> if len(name) >= 6:
+	...     print('the name is long')					<-- first True statement so stops here!
+	... elif len(name) == 9:
+	...     print('name is 9 characters')
+	... elif len(name) >= 4:
+	...     print('name is 4 or more characters')
+	... else:
+	...     print('what a great name')
+	...
+	the name is long									<-- output
+
+
+
+	
+	
+Lecture: The 'while' Loop
+-------------------------
+
+while  for   continue / break
+
+
+
+while
+	https://docs.python.org/3/tutorial/introduction.html#first-steps-towards-programming
+	
+for
+	https://docs.python.org/3/tutorial/controlflow.html#for-statements%3CPaste%3E
+
+
+"while"  Loop	:
+	
+	>>> count = 1
+	>>> while count <= 4:
+	...     print(f'Loop #: {count}')
+	...     count += 1
+	...
+	Loop #: 1
+	Loop #: 2
+	Loop #: 3
+	Loop #: 4
+
+	
+	>>> count = 0
+	>>> while count < 10:
+	...     if count % 2 == 0:
+	...         count += 1
+	...         continue
+	...     print(f"We're counting odd numbers: {count}")
+	...     count += 1
+	...
+	We're counting odd numbers: 1
+	We're counting odd numbers: 3
+	We're counting odd numbers: 5
+	We're counting odd numbers: 7
+	We're counting odd numbers: 9
+
+
+	>>> while count < 10:
+	...     if count % 2 == 0:
+	...         break
+	...     print(f"We're counting odd numbers: {count}")
+	...     count += 1
+	...
+	We're counting odd numbers: 1
+
+	
+
+
+	
+"for"  Loop	:
+
+	>>> colors = ['blue', 'green', 'orange', 'red']
+	>>> for x in colors:
+	...     print (x)
+	...
+	blue
+	green
+	orange
+	red
+
+	>>> for x in colors:
+	...     if x == 'blue':
+	...         continue
+	...     elif x == 'red':
+	...         break
+	...     print(x)
+	...
+	green
+	orange
+
+for loop with a tuple:	
+	>>> point = (2.1, 3.2, 7.5)
+	>>> for value in point:
+	...     print(value)
+	...
+	2.1
+	3.2
+	7.5
+	>>>
+
+for loop with a dict:
+	>>> ages = dict(kevin=10, bob=20, kayla=35)
+	>>> for key in ages:
+	...     print(key)
+	...
+	kevin
+	bob
+	kayla
+
+	
+	>>> list_of_points = [(1, 2), (3, 4), (5, 6)]
+	>>> for x, y in list_of_points:
+	...     print(f"x: {x}, y: {y}")
+	...
+	x: 1, y: 2
+	x: 3, y: 4
+	x: 5, y: 6
+
+	
+	>>> for name, age in ages.items():
+	...     print(f"Person named: {name}")
+	...     print(f"Age of: {age}")
+	...
+	Person named: kevin
+	Age of: 10
+	Person named: bob
+	Age of: 20
+	Person named: kayla
+	Age of: 35
+	>>>
+	>>> ages.items()
+	dict_items([('kevin', 10), ('bob', 20), ('kayla', 35)])		<-- returned the dict from above
+	>>>
+
+	>>> for a, b in ages.items():
+	...     print(f"Person named: {a}")
+	...     print(f" is of age: {b}")
+	...
+	Person named: kevin
+	is of age: 10
+	Person named: bob
+	is of age: 20
+	Person named: kayla
+	is of age: 35
+	
+	
+	
+	
+	
+Lecture: Logic Operations
+-------------------------
+
+	not   or   and
+
+Boolean Operators:
+	https://docs.python.org/3/tutorial/introduction.html#first-steps-towards-programming
+
+
+	>>> name = ""
+	>>> not name		<-- "not" negates if it's True then answer is False and vice versa	
+	True
+
+	
+	>>> 0 or 1 or 2
+	1						with or, the first "Truethy" value is where it stops
+	
+	
+	
+	>>> first = "Jeff"
+	>>> last = None
+	>>> if first and last:							<- "and" evaluates left to rigth!
+	...      print(f"Full name: {first} {last}")
+	... elif first:
+	...     print(f"First name: {first}")
+	... elif last:
+	...     print(f"Last name: {last}")
+	...
+	First name: Jeff
+	>>>
+	>>> last = "Avendano"
+	>>> if first and last:
+	...     print(f"Full name is: {first} {last}")
+	...
+	Full name is: Jeff Avendano
+
+
+
+
+Exercise: Creating and Displaying Variables
+-------------------------------------------
+
+first_name - Set to your first name
+last_name - Set to your last name
+age - Set to your age as an integer
+birth_date - Set to your birthdate as a string
+	
+
+>>> first_name = ("Jeff")
+>>> last_name = ("Avendano")
+>>> age = 45
+>>> birth_date = ("May 10 1974")
+>>> print(f"My name is {first_name} {last_name}.\nI was born on {birth_date}, and I'm {age} years old.")
+My name is Jeff Avendano.
+I was born on May 10 1974, and I'm 45 years old.
+>>>
