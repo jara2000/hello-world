@@ -1,4 +1,37 @@
-Python 3
+
+n 3
+
+
+Importing packages from standard libraries.
+3rd party code from opensource.
+Developer best pactices
+
+
+Lecture: Setting up a Cloud Server Development Environment
+==========================================================
+
+	To create your Cloud Server select "Playground" from the Linux Acad top menu selection.
+	Choose a CentOS7 vm and go form there....
+	
+	
+	Server created and credentials are:
+		Username:	cloud_user 
+	Temp. Password:	b64e7924db33d2b83c06 <-- changed after 1st login "su2k"
+	
+	IP Address
+		Public IPv4		54.153.19.155 	<-- this IP will change at each reboot!
+		Private IPv4	172.31.26.155 
+				IPv6	2600:1f1c:2bf:6405:db37:4da4:f0d5:d010 
+	
+		Public Hostnames
+			jara20001c.mylabserver.com
+			jara20001d.mylabserver.com
+	
+	Auto Shutdown
+	4:55 PM
+
+
+
 
 Required Software Packages, Tools, and Files:
  git, wget, which, words (need file at /usr/share/dict/words)
@@ -768,7 +801,7 @@ Boolean Operators:
 	Full name is: Jeff Avendano
 
 
-
+==========================================================================================================
 
 Exercise: Creating and Displaying Variables
 -------------------------------------------
@@ -787,3 +820,147 @@ birth_date - Set to your birthdate as a string
 My name is Jeff Avendano.
 I was born on May 10 1974, and I'm 45 years old.
 >>>
+
+
+Exercise: Creating and Displaying Variables
+-------------------------------------------
+
+Create a script that has a single variable you can set at the top called user. 
+This user is a dictionary containing the keys:
+
+'admin' - a boolean representing whether the user is an admin user.
+'active' - a boolean representing whether the user is currently active.
+'name' - a string that is the user.s name.
+
+ie: user = { 'admin': True, 'active': True, 'name': 'Jeff' }
+
+
+>>Using pycharm code below works fine.
+
+	C:\Users\jara\PycharmProjects\Workspace\venv\Scripts\python.exe C:/Users/jara/PycharmProjects/Workspace/venv/elif.py
+	ACTIVE - (ADMIN) Jeff
+	
+	Process finished with exit code 0
+
+>>However from REPL it gives a SyntaxError on print statement :    print(var1 + user['name'])
+
+user = { 'admin': True, 'active': True, 'name': 'Jeff' }
+var1 = ""
+if user['admin'] and user['active']:
+    var1 = "ACTIVE - (ADMIN) "
+elif user['admin']:
+    var1 = "(ADMIN) "
+elif user['active']:
+    var1 = "ACTIVE - "
+print(var1 + user['name'])
+
+
+
+Exercise: Iterating Over Lists
+------------------------------
+Building on top of the conditional exercise, write a script that will loop through a 
+list of users where each item is a user dictionary from the previous exercise printing
+out each user.s status on a separate line. Additionally, print the line number at the 
+beginning of each line, starting with line 1. Be sure to include a variety of user 
+configurations in the users list.
+
+User Keys:
+
+'admin' - a boolean representing whether the user is an admin user.
+'active' - a boolean representing whether the user is currently active.
+'name' - a string that is the user.s name.
+Depending on the values of the user, print one of the following to the screen when you run the script.
+
+Print (ADMIN) followed by the user.s name if the user is an admin.
+Print ACTIVE - followed by the user.s name if the user is active.
+Print ACTIVE - (ADMIN) followed by the user.s name if the user is an admin and active.
+Print the user.s name if neither active nor an admin.
+
+
+
+
+Working code using pyCharm:
+==========================
+
+users = [
+    { 'admin': True, 'active': True, 'name': 'Jeff' },
+    { 'admin': True, 'active': False, 'name': 'Renelle' },
+    { 'admin': False, 'active': True, 'name': 'Dave' },
+    { 'admin': False, 'active': False, 'name': 'Mike' },
+]
+
+line = 1
+
+for user in users:
+    var1 = (f"{line} ")
+
+    if user['admin'] and user['active']:
+        var1 += "ACTIVE - (ADMIN) "
+    elif user['admin']:
+        var1 += "(ADMIN) "
+    elif user['active']:
+        var1 += "ACTIVE - "
+
+    print(var1 + user['name'])
+    line += 1
+
+Output:
+======
+
+C:\Users\jara\PycharmProjects\Workspace\venv\Scripts\python.exe C:/Users/jara/PycharmProjects/Workspace/venv/elif2.py
+1 ACTIVE - (ADMIN) Jeff
+2 (ADMIN) Renelle
+3 ACTIVE - Dave
+4 Mike
+
+Process finished with exit code 0
+
+
+==========================================================================================================
+
+
+
+
+Lecture: Reading User Input
+---------------------------
+
+Input function:  https://docs.python.org/3/library/functions.html#input
+
+	input([prompt])
+
+
+$ vi age
+
+#!/usr/local/bin/python3.6
+
+name = input("What is your name? ")
+birthday = input("When is your birthday? ")
+age = int(input("How old are you? "))
+print("\n")
+
+print(f"{name} was born on {birthday}")
+print(f"Half of your age is {age / 2}")
+	
+
+$ chmod u+x age
+$ age
+What is your name? Jeff
+When is your birthday? May 10, 1966
+How old are you? 50
+
+Jeff was born on May 10, 1966
+Half of your age is 25.0
+$
+
+
+
+
+
+Lecture: Function Basics
+------------------------
+
+	https://docs.python.org/3/tutorial/controlflow.html#defining-functions
+	
+
+
+
