@@ -1,5 +1,4 @@
-
-n 3
+Python 3
 
 
 Importing packages from standard libraries.
@@ -959,8 +958,147 @@ $
 Lecture: Function Basics
 ------------------------
 
+Defining Functions:
 	https://docs.python.org/3/tutorial/controlflow.html#defining-functions
 	
+
+We can create functions in Python using the following:
+	The def keyword
+	The function name - lowercase starting with a letter or underscore (_)
+	Left parenthesis (()
+	0 or more argument names
+	Right parenthesis ())
+	A colon :
+	An indented function body
+
+
+
+	
+Here.s an example without an argument:
+
+>>> def hello_world():
+...     print("Hello, World!")
+...
+>>> hello_world()								<-- print the function, just add the ()
+Hello, World!
+
+>>> hello_world
+<function hello_world at 0x7f909894f578>		<-- tells us that this it is a function
+>>>
+
+
+If we want to define an argument we will put the variable name 
+we want it to have within the parentheses:
+>>> def print_name(name):
+...     print(f"Name is {name}")
+...
+>>> print_name("Jeff")
+Name is Jeff
+
+
+Let.s try to assign the value from print_name to a variable:
+>>> output = print_name("Smith")
+Name is Smith
+>>> output
+>>>						<-- output alone returns None
+
+
+If we don.t explicitly declare a return value, then the result will be None.
+We can declare what we.re returning from a function using the return keyword:
+>>> def add_two(num):
+...     return num + 2
+...
+>>> result = add_two(2)
+>>> result
+4
+
+
+
+
+Lecture: Using Functions in Scripts
+-----------------------------------
+Write a script that calculates the user.s Body Mass Index (BMI).
+
+$ vi bmi.py
+#!/usr/bin/env python3.6
+... put the three pieces below together and save
+$ chmod u+x bmi.py
+$ ./bmi.py
+
+
+
+
+Formula for BMI:
+	BMI = (weight in kg / height in meters squared )
+	
+	
+step 1)	
+Gathering the Info, prompt user multiple times and package up our calls to input 
+within a single function that returns a tuple with the user given information:
+
+=======================================
+def gather_info():
+    height = float(input("What is your heigt?  (inches or meters) "))
+    weight = float(input("What is your weigt?  (pounds or kilograms) "))
+    system = input("Are your measurements in metric or imperial units? ").lower().strip()
+    return(height, weight, system)
+=======================================
+
+We.re converting the height and weight into float values, and we.re okay with a potential
+error if the user inputs an invalid number. For the system, we.re going to standardize 
+things by calling lower to lowercase the input and then calling strip to remove the whitespace
+from the beginning and the end.
+
+The most important thing about this function is the return statement that we added to ensure 
+that we can pass the height, weight, and system back to the caller of the function.	
+	
+	
+
+	
+setp 2)
+Calculating and Printing the BMI. Once we.ve gathered the information, we need to use that 
+information to calculate the BMI. 	
+
+Return the Body Mass Index (BMI) for the given weight, height and measurement system.
+    
+=======================================
+def calc_bmi(weight, height, system='metric'):
+    if system == 'metric':
+        bmi = (weight / (height ** 2))
+    else:
+        bmi = 703 * (weight / (height ** 2))
+    return bmi
+=======================================
+	
+	
+	
+setp 3)
+Setting Up The Script.s Flow. We want to be able to re-prompt the user, so we want to utilize 
+an intentional infinite loop that we can break out of. Depending on the system, we.ll determine
+how we should calculate the BMI or prompt the user again. Here.s our flow:
+
+======================================
+while True:
+    height, weight, system = gather_info()
+    if system.startswith('i'):
+        bmi = calc_bmi(weight, system=system, height=height)
+        print(f"Your BMI is {bmi}")
+        break
+    elif system.startswith('m'):
+        bmi = calc_bmi(weight, height)
+        print(f"Your BMI is {bmi}")
+        break
+    else:
+        print("Error: Unknown measurement system. Please use imperial or metric.")
+======================================
+
+
+$ ./ bmi.py
+What is your heigt?  (inches or meters) 67
+What is your weigt?  (pounds or kilograms) 200
+Are your measurements in metric or imperial units? m
+Your BMI is 0.044553352639786145
+
 
 
 
