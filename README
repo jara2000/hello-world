@@ -14,11 +14,11 @@ Lecture: Setting up a Cloud Server Development Environment
 	
 	
 	Server created and credentials are:
-		Username:	cloud_user 
+	      Username:	cloud_user 
 	Temp. Password:	b64e7924db33d2b83c06 <-- changed after 1st login "su2k"
 	
 	IP Address
-		Public IPv4		54.153.19.155 	<-- this IP will change at each reboot!
+		Public IPv4	54.153.19.155 	<-- this IP will change at each reboot!
 		Private IPv4	172.31.26.155 
 				IPv6	2600:1f1c:2bf:6405:db37:4da4:f0d5:d010 
 	
@@ -26,9 +26,6 @@ Lecture: Setting up a Cloud Server Development Environment
 			jara20001c.mylabserver.com
 			jara20001d.mylabserver.com
 	
-	Auto Shutdown
-	4:55 PM
-
 
 
 
@@ -503,8 +500,46 @@ We can also use the pop method to remove items at a specific index:
 	'a'
 	>>> my_list
 	['c']
-	
 
+	
+	
+                     10        20        30   35  <=35 chars 0-34
+                      |         |         |    |
+more on slicing:	   01234567890          1234 
+			 0123456789           1234567890 
+>>> comment="Hello World ! Spring is almost here"
+>>> len(comment)
+35
+>>> comment[5:35:2]		<-- beginning with index 5 (the space), for length of 35, print index 6 and every 2nd char from there...
+' ol  pigi lothr'
+>>>
+>>> comment[4]			<-- print char at index 4
+'o'
+>>>          0123456789012345	<-- 16 chars total (0 - 15)
+>>> address="Montreal, Quebec"
+>>> len(address)
+16
+>>> city=address[0:8]
+>>> print(city)
+Montreal
+>>> province=address[10:16]			<-- from index 10 to 16
+>>> print(province)
+Quebec
+>>> province=address[10:]			<-- from index 10 to the end
+>>> print(province)
+Quebec
+>>>
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 
 Lecture: Tuples
@@ -951,6 +986,37 @@ How old are you? 50
 Jeff was born on May 10, 1966
 Half of your age is 25.0
 $
+
+
+
+more about input()
+
+>>> msg=input()
+I want to be a part MU
+>>> msg
+'I want to be a part MU'
+>>>
+>>>
+>>> msg=input('Enter your message\n')
+Enter your message
+Do you like soccer?
+>>> msg
+'Do you like soccer?'
+>>>
+
+
+>>>
+>>> print("My name is Jeff")
+My name is Jeff
+>>> name="Renelle"
+>>> print("My name is " + name)
+My name is Renelle
+>>>
+>>> print(f"{name} is my name")
+Renelle is my name
+>>>
+
+
 
 
 
