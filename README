@@ -1,700 +1,1114 @@
-another course "git and gitlab start to finish 7course"
+Python 3
 
 
-Git
----
-  git status
-  git add
-  git rm 
-  git commit -m "blah blah blah"
+Importing packages from standard libraries.
+3rd party code from opensource.
+Developer best pactices
 
 
-GIT - Installation and configuration
-------------------------------------
+Lecture: Setting up a Cloud Server Development Environment
+==========================================================
+
+	To create your Cloud Server select "Playground" from the Linux Acad top menu selection.
+	Choose a CentOS7 vm and go form there....
+	
+	
+	Server created and credentials are:
+		Username:	cloud_user 
+	Temp. Password:	b64e7924db33d2b83c06 <-- changed after 1st login "su2k"
+	
+	IP Address
+		Public IPv4		54.153.19.155 	<-- this IP will change at each reboot!
+		Private IPv4	172.31.26.155 
+				IPv6	2600:1f1c:2bf:6405:db37:4da4:f0d5:d010 
+	
+		Public Hostnames
+			jara20001c.mylabserver.com
+			jara20001d.mylabserver.com
+	
+	Auto Shutdown
+	4:55 PM
+
+
+
+
+Required Software Packages, Tools, and Files:
+ git, wget, which, words (need file at /usr/share/dict/words)
+ lsof, text editor of your choice, python 3.6.5
+
+
  
-# yum -y install git
-
-
-# git config --global user.name "jefftest123"
-# git config --global user.email "toto2000@gmail.com"
-
-# git config --system core.editor "/usr/bin/vi"
-
-	creates -->  /etc/gitconfig
-		# cat /etc/gitconfig
-		  [core]
-		  editor = /usr/bin/vi
-.
-
-
-
-
-GIT - Creating a Local Repository and Adding Content  (and removing content)
-----------------------------------------------------------------------------
-
-  git status
-  git add
-  git rm 
-  git commit -m "blah blah blah"
+1. Installing Packages
+The following commands are used on the cloud server to install the packages and files that we need. 
+  $ sudo su -
+  # yum update
+  # yum groupinstall -y "development tools"
+  # yum install -y lsof wget vim-enhanced words which htop
+  # exit
+  $
   
+2. Configuring Git
+From our user account (instead of root):
+
+  $ git config --global user.name "Jeff Avendano"
+  $ git config --global user.email "jara2000@gmail.com.com"
+
+
+
+3. Customizing Bash
+Downloading a bashrc file from the Linuxacademy "GitHub repository" and place it in your $HOME directory. 
+This command will download the file, rename it, and place it in the proper directory:
+
+Linuxacademy GitHub repository -> https://github.com/linuxacademy/content-python3-sysadmin
+
+ $ curl https://raw.githubusercontent.com/linuxacademy/content-python3-sysadmin/master/helpers/bashrc -o ~/.bashrc
+   
+
+4. Customizing Vim  ,.. Like was done for bashrc above.
+
+  $ curl https://raw.githubusercontent.com/linuxacademy/content-python3-sysadmin/master/helpers/vimrc -o ~/.vimrc
+    
+ 
+
+5. Create the GIT repo in your $HOME :
+
+   $ mkdir sample ; cd sample
+   sample $ touch file.txt
+   
+   sample $ git init   			<-- turn directory into a Git repository
+   Initialized empty Git repository in /home/cloud_user/sample/.git/
+   
+   sample $ git add --all .		<-- means add every file that's underneath my current directory
+   
+   sample $ git status			<-- we have a new file "file.txtx" that hasn't been committed yet...
+   # On branch master
+   #
+   # Initial commit
+   #
+   # Changes to be committed:
+   #   (use "git rm --cached <file>..." to unstage)
+   #
+   #       new file:   file.txt
+   #
+   sample $
+   
+   
+   
+  sample $ git commit -m 'Added new file'
+	[master (root-commit) a4dcc97] Added new file
+	1 file changed, 0 insertions(+), 0 deletions(-)
+	create mode 100644 file.txt
+  sample[master] $
+
+
+So now we have setup our Cloud server and installed some tools for our development purposes!
+We will next install Python which we will compile from source and go from there.
+
+
+
+
+
+
+
+Lecture: Installing Python 3 on CentOS 7
+========================================
+
+Download and Install Python 3 from Source
+
+Here are the commands that we.ll run to build and install Python 3:
+
+$ sudo su - 
+[root] # yum install -y libffi-devel zlib-devel bzip2-devel openssl-devel \
+ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel \
+libpcap-devel xz-devel expat-devel
+
+
+Goto: http://python.org  
+		>> Downloads  
+		 >> Source code 
+		  >> and select the "Gzipped source tarball" version you want (Copy link address)
+
+		  
+		  
+[root ] # cd /usr/src
+[root ] # wget https://www.python.org/ftp/python/3.6.4/Python-3.6.4.tgz
+[root ] # tar xf Python-3.6.4.tgz
+[root ] # cd Python-3.6.4
+[root ] # ./configure --enable-optimizations
+[root ] # make altinstall						<-- Very important, this will not overwrite the built in python 
+[root ] # exit										Py2.x executable. It will create a new Py3 executable!
+			back to regular user,..
+
+*Ensure that secure_path in /etc/sudoers file includes /usr/local/bin
+
+
+
+
+Upgrade Pip (Might not be Necessary)
+The version of pip that we have might be up-to-date, but it.s good practice to try to 
+update it after the installation. We need to use the pip3.6 executable because we.re 
+working with Python 3, and we use sudo so that we can write files under the /usr/local directory.
+
+	( I had no pip installed so I had to do :    $ sudo yum install python36-pip-8.1.2-7.el7.noarch  )
+	$ sudo pip3.6 install --upgrade pip		<-- Pip is the package manager used when working with Python
+	
+
+
+	
+
+	
+	
+Lecture: History & Benefits of Python
+=====================================
+
+Python 3 - 2008
+
+Key Points About Python:
+
+Object-Oriented Scripting Language.
+
+Dynamic & strong typing system.
+	Dynamic types are checked at runtime
+	Strong types don.t change implicitly, can.t add 1 and "something".
+	
+Supports functional concepts like "map, reduce, filter" and list comprehension.
+
+Whitespace delimited (no { or } around code blocks)
+
+Pseudo-code like syntax
+
+Extremely popular language used across many different disciplines (academia, data science, 
+scripting, web development, etc.).
+
+Large open source community and public package index (Pypi).
+
+Runs on all major operating systems (historically more of a pain to run on Windows than 
+Unix systems). Pre-installed on most *NIX systems (usually Python 2).
+
+Supported by large companies such as Google & YouTube.
+
+Consistently high on the Tiobe Index (one of the most searched programming languages). 
+4th as of the time of recording this.
+
+Placed in the Stack Overflow Developer Survey.s top 10 for Most Popular Programming Languages, 
+Most Loved Programming Languages, and placed number 1 as the .Most Wanted Language. (meaning 
+it.s the language that developers want to use the most).
+
+
+
+
+
+
+
+Lecture: What's the Deal with Python 3?
+=======================================
+
+ https://wiki.python.org/moin/Python2orPython3
+
+ https://docs.python.org/3/whatsnew/3.0.html
+
+
+
+
+ 
+ 
+Lecture: Introducing the REPL for Rapid Experimentation 
+=======================================================
+
+REPL stands for: Read, Evaluate, Print, Loop 
+
+$ python3.6
+Python 3.6.4 (default, Feb 24 2019, 19:20:58)
+[GCC 4.8.5 20150623 (Red Hat 4.8.5-36)] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>>
+
+
+to exit the REPL, you can either type:
+ exit() 		, or you can hit 
+ Ctrl+d
+
+
+
+
+
+
+Lecture:  Creating and Running Python Scripts
+=============================================
+
+$ vim hello.py
+print('Hello World!')
+
+$ python3.6 hello.py
+Hello World!
+
+or 
+
+$ vim hello.py
+ #!/usr/local/bin/python3.6					<-> #!/usr/bin/env python3.6   <- this line from lab didn't work !!
+ print('Hello World!')
+
+$ chmod u+x hello.py
+$ ./hello.py
+Hello World!
+
+							<-- create $HOME/bin and put scripts there
+$ mkdir bin
+$ mv hello.py ~/bin/
+$ export PATH=$HOME/bin:$PATH	<-- add $HOME/bin to your $PATH from CKLI or in .bashrc
+$ hello.py
+Hello World!
+
+====================
+Lets put our Timezone instead of using UTC
+
+$ sudo timedatectl list-timezones
+$ sudo timedatectl set-timezone America/New_York
+$ timedatectl 
+====================
+
+
+
+
+
+
+
+Lecture: Using Comments
+=======================
+
+"""
+This is a string 
+and it take multiple lines
+"""
+
+
+
+
+
+
+	==========================
+	==========================
+	|	 Common Data Types 	  |
+	==========================
+	==========================
+
+
+Lecture: Strings   
+----------------
+ https://docs.python.org/3/library/stdtypes.html#text-sequence-type-str
+
+
+A string is an object.
+	1. An object can have a state
+	2. An object can hold on to some behaviour that it can use, this behaviour on objects refers to 
+	   functions that are attached to the object itself and these are called methods.
+
+Some Methods:	.find    .lower   .upper
+   
+examples:
+	>>> "double".find('s')      here we call a method on the string double ( . )
+	-1							<-- false
+	>>> "double".find('l')
+	4
+	>>> "double".find('e')
+	5
+	>>> "double".find('d')
+	0
+	>>>
+	>>> "TeSting".lower()		<-- calling the method "lower"
+	'testing'
+	>>> 'Password123'.lower()
+	'password123'
+	>>>
+	>>> 'Ha' * 4				<-- arithmetic operators + and *
+	'HaHaHaHa'
+	>>>
+
+special chars:   \t     \n    ""   ''    \  <-Esc
+	>>> print('Hey\tYou')
+	Hey     You
+	>>> 'Hey\tYou'
+	'Hey\tYou'
+	>>>
+	>>> print('Hey\nYou')
+	Hey
+	You
+	>>>
+	>>> print('Hey\\You')
+	Hey\You
+	>>>
+	>>> print("'Hey' you 'what are'")
+	'Hey' you 'what are'
+	>>>
+	>>> print('"Hey" you "what are"')
+	"Hey" you "what are"
+
+	>>> print('Your's is awesome')			
+	File "<stdin>", line 1					<-- yup! need to Esc it with a \
+1		print('Your's is awesome')
+					^
+	SyntaxError: invalid syntax
+	
+	>>> print('Your\'s is awesome')			<-- now it works!
+	Your's is awesome
+	>>>
+
+	
+	
+	
+
+Lecture: Numbers (int and float)	
+--------------------------------
+  https://docs.python.org/3/library/stdtypes.html#numeric-types-int-float-complex
   
+  +  /  -  *  %   //   **
+
+str   int   float
+
+Operation		Result
+--------------  -------------------------------------
+x + y			sum of x and y	 	 
+x - y			difference of x and y	 	 
+x * y			product of x and y	 	 
+x / y			quotient of x and y	 	 
+x // y			floored quotient of x and y 
+x % y			remainder of x / y
+-x				x negated	 	 
++x				x unchanged	 	 
+abs(x)			absolute value or magnitude of x
+int(x)			x converted to integer
+float(x)		x converted to floating point
+complex(re, im)	a complex number with real part re,1
+				imaginary part im. im defaults to zero.
+c.conjugate()	conjugate of the complex number c	 	 
+divmod(x, y)	the pair (x // y, x % y)
+pow(x, y)		x to the power y
+x ** y			x to the power y
+
+
+
+
+
+Lecture: Booleans and None
+--------------------------
+  https://docs.python.org/3/library/stdtypes.html#truth-value-testing
+	
+	True  	False   None
+	^		^		^
+	
+	>>> type(True)
+	<class 'bool'>
+	>>>
+	>>> bool({})
+	False
+	>>>
+	>>> bool("")
+	False
+	>>> bool("Jeff")
+	True
+	>>>
+
+	>>> None
+	>>>
+
+
+	
+
+Lecture: Working with Variables
+-------------------------------
+
+	>>> my_str = "This is a simple string"
+	>>> my_str
+	'This is a simple string'
+	>>> print(my_str)
+	This is a simple string
+	>>>
+	>>> my_str += " testing"
+	>>> my_str
+	'This is a simple string testing'
+	>>>
+	>>> my_str = my_str + " testing"
+	>>> my_str
+	'This is a simple string testing testing'
+	>>>
+	
+	
+
+	
+Lecture: Lists
+--------------
+
+ [ ]  .append    .remove    .pop
+
+Sequence Types . list, tuple, range:
+  https://docs.python.org/3/library/stdtypes.html#sequence-types-list-tuple-range  
   
- 
-# mkdir repo
-# cd repo
-# git init .
-Initialized empty Git repository in /root/repo/.git/
-
-repo]# ll .git
-drwxr-xr-x. 2 root root    6 Feb  6 20:41 branches
--rw-r--r--. 1 root root   92 Feb  6 20:41 config
--rw-r--r--. 1 root root   73 Feb  6 20:41 description
--rw-r--r--. 1 root root   23 Feb  6 20:41 HEAD
-drwxr-xr-x. 2 root root 4096 Feb  6 20:41 hooks
-drwxr-xr-x. 2 root root   20 Feb  6 20:41 info
-drwxr-xr-x. 4 root root   28 Feb  6 20:41 objects
-drwxr-xr-x. 4 root root   29 Feb  6 20:41 refs
-
-
-
-repo]#  echo "/* This is a valid C source file */" > source.c
-repo]# ll -a
-
-drwxr-xr-x. 3 root root   48 Feb  6 20:45 .
-dr-xr-x---. 4 root root 4096 Feb  6 20:41 ..
-drwxr-xr-x. 7 root root 4096 Feb  6 20:41 .git
--rw-r--r--. 1 root root   22 Feb  6 20:44 README.MD
--rw-r--r--. 1 root root   36 Feb  6 20:45 source.c
-
-
-repo]# git status
-		# On branch master
-		#
-		# Initial commit
-		#
-		# Untracked files:
-		#   (use "git add <file>..." to include in what will be committed)
-		#
-		#       README.MD
-		#       source.c
-		nothing added to commit but untracked files present (use "git add" to track)
-repo]#
-
-repo]# git config --global user.name "jeffa"					<-- specifying a user "jeffa"
-repo]# git config --global user.email "jeffa@example.com"
-
-repo]# git add .
-repo]# git status
-
-repo]# git status
-		# On branch master
-		#
-		# Initial commit
-		#
-		# Changes to be committed:
-		#   (use "git rm --cached <file>..." to unstage)
-		#
-		#       new file:   README.MD
-		#       new file:   source.c
-		#
-repo]#
-
-
-repo]# echo "This is a testing file" > test.txt
-repo]# git status
-		# On branch master
-		#
-		# Initial commit
-		#
-		# Changes to be committed:
-		#   (use "git rm --cached <file>..." to unstage)
-		#
-		#       new file:   README.MD
-		#       new file:   source.c
-		#
-		# Untracked files:
-		#   (use "git add <file>..." to include in what will be committed)     <-- here is that new file Untracked because 
-		#																		   no "git add" command was run for it!
-		#       test.txt
-repo]#
-
-repo]# git add test.txt
-repo]# git status
-		# On branch master
-		#
-		# Initial commit
-		#
-		# Changes to be committed:
-		#   (use "git rm --cached <file>..." to unstage)
-		#
-		#       new file:   README.MD
-		#       new file:   source.c
-		#       new file:   test.txt							<-- after the "git add test.txt" command
-		#
-repo]#
-
-
-
-Now we want to commit these files to the repository
-run a commit it with a message (use -m option):
---
-repo]# git commit -m "This is the initial commit of files to my repo"
-		[master (root-commit) 863f5f0] This is the initial commit of files to my repo
-		3 files changed, 3 insertions(+)
-		create mode 100644 README.MD
-		create mode 100644 source.c
-		create mode 100644 test.txt
-repo]#
+Lists
+  https://docs.python.org/3/library/stdtypes.html#list
+
+	>>> my_list = [1, 2, 3, 4, 5]
+	>>> len(my_list)
+	5
+	
+	>>> my_list[0:2]
+	[1, 2]
+	>>> my_list[:3]
+	[1, 2, 3]
+	>>> my_list[0::1]
+	[1, 2, 3, 4, 5]
+	>>> my_list[0::2]
+	[1, 3, 5]
+  
+Change a value in a list using the subscript equals operation: 
+	>>> my_list[0] = "a"
+	>>> my_list
+	['a', 2, 3, 4, 5]
+
+Example of a method that modifies the object that is calling the method:
+	>>> my_list.append(6)
+	>>> my_list.append(7)
+	>>> my_list
+	['a', 2, 3, 4, 5, 6, 7]	
+
+Lists can be added together (concatenated): 	
+	>>> my_list + [8, 9, 10]
+	['a', 2, 3, 4, 5, 6, 7, 8, 9, 10]
+	>>> my_list
+	['a', 2, 3, 4, 5, 6, 7]
+	>>> my_list += [8, 9, 10]
+	>>> my_list
+	['a', 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+Items in lists can be set using slices also: 
+	>>> my_list[1:3] = ['b', 'c']
+	>>> my_list
+	['a', 'b', 'c', 4, 5, 6, 7, 8, 9, 10]
+	
+Removing items from a list based on value can be done using the .remove method: 
+	>>> my_list.remove('b')
+	>>> my_list
+	['a', 'c', 4, 5, 6, 7, 8, 9, 10]
+	
+Items can also be removed from the end of a list using the pop method: 
+	>>> my_list = ['a', 'c', 'd']
+	>>> my_list
+	['a', 'c', 'd']
+	>>> my_list.pop()
+	'd'
+	>>> my_list
+	['a', 'c']
+
+We can also use the pop method to remove items at a specific index: 
+	>>> my_list.pop(0)
+	'a'
+	>>> my_list
+	['c']
+	
+
+
+
+Lecture: Tuples
+---------------
+
+Sequence Types . list, tuple, range
+	https://docs.python.org/3/library/stdtypes.html#sequence-types-list-tuple-range
+
+Tuples
+	https://docs.python.org/3/library/stdtypes.html#tuple
+	
+	
+	>>> point = (2.0, 3.0)
+	>>> point_3d = point + (4.0,)
+	>>> point_3d
+	(2.0, 3.0, 4.0)
+
+	>>> x, y, z = point_3d
+	>>> x
+	2.0
+	>>> y
+	3.0
+	>>> z
+	4.0
+
+More common in Python 2:	
+	>>> print("My name is: %s %s" % ("Jeff", "Avendano"))
+	My name is: Jeff Avendano
+
+
+
+	
+	
+Lecture: Dictionaries (dicts)
+-----------------------------
+
+Dictionary
+	https://docs.python.org/3/library/stdtypes.html#mapping-types-dict	
+
 
-
-
-repo]# git status
-# On branch master
-nothing to commit, working directory clean
-
-So lets make a change to the READM.MD file by adding a new line at the end:
-
-repo]# echo -e "\nThis is a new comment after the first commit" >> README.MD
-
-repo]# git status
-		# On branch master
-		# Changes not staged for commit:
-		#   (use "git add <file>..." to update what will be committed)
-		#   (use "git checkout -- <file>..." to discard changes in working directory)
-		#
-		#       modified:   README.MD											<-- Here we are told something was modified!!
-		#
-		no changes added to commit (use "git add" and/or "git commit -a")		<-- change has not been added to repo in that file
-repo]#
-
-
-
-
-
-repo]# echo "This is a 2nd new file" > test2.txt
-repo]# git status
-		# On branch master
-		# Changes not staged for commit:
-		#   (use "git add <file>..." to update what will be committed)
-		#   (use "git checkout -- <file>..." to discard changes in working directory)
-		#
-		#       modified:   README.MD										<-- modified file from earlier
-		#
-		# Untracked files:
-		#   (use "git add <file>..." to include in what will be committed)
-		#
-		#       test2.txt													<-- newly added file "Untarcked"
-		no changes added to commit (use "git add" and/or "git commit -a")
-repo]#
-
-
-
- Lets commit the changes, it will modify the  file README.ME but won't do anything for new file test2.txt
- To action the new and "Untracked" filetest2.txt I need to run a "git add test2.txt" and then run a "git commit -a" 
-
-repo]# git commit -a
-		[master 842aeb9] Saving the changes to README.ME
-		1 file changed, 2 insertions(+)
-repo]#
-
-repo]# git status
-# On branch master
-# Untracked files:
-#   (use "git add <file>..." to include in what will be committed)
-#
-#       test2.txt
-nothing added to commit but untracked files present (use "git add" to track)
-
-
-
-repo]# git add test2.txt
-repo]# git status
-# On branch master
-# Changes to be committed:
-#   (use "git reset HEAD <file>..." to unstage)
-#
-#       new file:   test2.txt
-#
-repo]#
-
-repo]# git commit -m "New test file"
-		[master d30892e] New test file
-		1 file changed, 1 insertion(+)
-		create mode 100644 test2.txt
-repo]#
-
-repo]# git status
-# On branch master
-nothing to commit, working directory clean					<-- tada!
-repo]#
-
-
-
-
-
-repo]# mkdir new
-repo]# mkdir new1
-repo]# echo "test new" > new/new.txt
-repo]# echo "test2 new" > new1/new.txt
-
-
-repo]# git status
-		# On branch master
-		# Untracked files:													<-- showing new dire "Untracked"
-		#   (use "git add <file>..." to include in what will be committed)
-		#
-		#       new/
-		#       new1/
-		nothing added to commit but untracked files present (use "git add" to track)
-repo]#
-
-
-repo]# git add .
-repo]# git status
-		# On branch master
-		# Changes to be committed:									<-- now they are ready to commit!
-		#   (use "git reset HEAD <file>..." to unstage)
-		#
-		#       new file:   new/new.txt
-		#       new file:   new1/new.txt
-		#
-repo]#
-
-
-repo]# git commit -m "Added new source directories"					<-- commit the new directories and files
-		[master dfbedec] Added new source directories
-		2 files changed, 2 insertions(+)
-		create mode 100644 new/new.txt
-		create mode 100644 new1/new.txt
-repo]#
-
-
-Now lets delete one file:  test2.txt
-and check,..
-
-repo]# git status
-		# On branch master
-		# Changes not staged for commit:
-		#   (use "git add/rm <file>..." to update what will be committed)
-		#   (use "git checkout -- <file>..." to discard changes in working directory)
-		#
-		#       deleted:    test2.txt										<-- ok seeing deleted...
-		#
-		no changes added to commit (use "git add" and/or "git commit -a")
-repo]#
-
-
-repo]# git commit -m "Removed test2.txt - it was redundant"
-		# On branch master
-		# Changes not staged for commit:
-		#   (use "git add/rm <file>..." to update what will be committed)
-		#   (use "git checkout -- <file>..." to discard changes in working directory)
-		#
-		#       deleted:    test2.txt									<-- still seeing seeing deleted
-		#
-		no changes added to commit (use "git add" and/or "git commit -a")
-repo]#
-
-repo]# git status
-		# On branch master
-		# Changes not staged for commit:
-		#   (use "git add/rm <file>..." to update what will be committed)
-		#   (use "git checkout -- <file>..." to discard changes in working directory)
-		#
-		#       deleted:    test2.txt								<-- humm ,.. still seeing this entry ??
-		#
-		no changes added to commit (use "git add" and/or "git commit -a")
-repo]#
-
-
-So when you delet a file you're not actually making a commit. Commitments add changes to tracked files
-or directories. The act of removing them is a seperate git command:  " git rm "
-
-repo]# git rm test2.txt
-rm 'test2.txt'
-
-[root@lab1 repo]# git status
-		# On branch master
-		# Changes to be committed:
-		#   (use "git reset HEAD <file>..." to unstage)
-		#
-		#       deleted:    test2.txt							<-- Ok still there, guess we need the commit now!
-		#
-repo]#
-
-
-repo]# git commit -m "Removed test2.txt - it was redundant"
-		[master 4f8db51] Removed test2.txt - it was redundant
-		1 file changed, 1 deletion(-)
-		delete mode 100644 test2.txt
-repo]#
-
-repo]# git status
-# On branch master
-nothing to commit, working directory clean					<-- ok, it's gone, yeah!!
-repo]#
-
-
-
-
-
-GIT - Logging
--------------
-# man git-log
-
-
-repo]# git status
-# On branch master
-nothing to commit, working directory clean
-repo]#
-
-
-repo]# git log     <-- gives somewhat verbose output,.. so a lot
-
-Let's go with less verbosage ...
-
-repo]# git log --oneline
-		4f8db51 Removed test2.txt - it was redundant
-		dfbedec Added new source directories
-		d30892e New test file
-		842aeb9 Saving the changes to README.ME
-		863f5f0 This is the initial commit of files to my repo
-repo]#
-
-
-repo]# git log -p			<-- shows pretty much everything that was done, all changes!! 
-
-
-
-
-
-So what if we just want to know what was done to a specific file?
-
-repo]# ll
-drwxr-xr-x. 2 root root 20 Feb  6 21:19 new
-drwxr-xr-x. 2 root root 20 Feb  6 21:19 new1
--rw-r--r--. 1 root root 68 Feb  6 21:00 README.MD
--rw-r--r--. 1 root root 36 Feb  6 20:45 source.c
--rw-r--r--. 1 root root 23 Feb  6 20:50 test.txt			<-- this file for instance ?
-repo]#
-
-repo]#  git log -- test.txt
-		commit 863f5f0cb0f83ae2749c2c575f302244d91b21a6
-		Author: jeffa <jeffa@example.com>
-		Date:   Wed Feb 6 20:56:42 2019 -0500
-		
-			This is the initial commit of files to my repo
-[root@lab1 repo]#
-
-repo]#  git log --oneline -- test.txt
-863f5f0 This is the initial commit of files to my repo
-
-
-
-repo]#  git log -- test2.txt								<-- check only for removed file test2.txt
-		commit 863f5f0cb0f83ae2749c2c575f302244d91b21a6
-		Author: jeffa <jeffa@example.com>
-		Date:   Wed Feb 6 20:56:42 2019 -0500
-		
-			This is the initial commit of files to my repo
-		[root@lab1 repo]#  git log -- test2.txt
-		commit 4f8db51345de247c8bacb0e6cb3e596b51451035
-		Author: jeffa <jeffa@example.com>
-		Date:   Wed Feb 6 21:37:23 2019 -0500
-		
-			Removed test2.txt - it was redundant
-		
-		commit d30892efbad82abc6b3a52d0a6e351752a0c7668
-		Author: jeffa <jeffa@example.com>
-		Date:   Wed Feb 6 21:14:44 2019 -0500
-		
-			New test file
-repo]#
-
-
-repo]#  git log --oneline -- test2.txt
-		4f8db51 Removed test2.txt - it was redundant
-		d30892e New test file
-[root@lab1 repo]#
-
-
-
-Look for patterns such as the "author" :
-		repo]#  git log  --author jeffa						or     git log  --author="jeffa"
-		commit 4f8db51345de247c8bacb0e6cb3e596b51451035
-		Author: jeffa <jeffa@example.com>
-		Date:   Wed Feb 6 21:37:23 2019 -0500
-		
-			Removed test2.txt - it was redundant
-		
-		commit dfbedec73109d44d81eecf9c3ac15585dddaf688
-		Author: jeffa <jeffa@example.com>
-		Date:   Wed Feb 6 21:24:04 2019 -0500
-		
-			Added new source directories
-		
-		commit d30892efbad82abc6b3a52d0a6e351752a0c7668
-		Author: jeffa <jeffa@example.com>
-		Date:   Wed Feb 6 21:14:44 2019 -0500
-		
-			New test file
-		
-		commit 842aeb930ae9691f253fb8a55dba7ac2065aa7f6
-		Author: jeffa <jeffa@example.com>
-		Date:   Wed Feb 6 21:06:39 2019 -0500
-		
-			Saving the changes to README.ME
-		
-		commit 863f5f0cb0f83ae2749c2c575f302244d91b21a6
-		Author: jeffa <jeffa@example.com>
-		Date:   Wed Feb 6 20:56:42 2019 -0500
-		
-			This is the initial commit of files to my repo
-repo]#
-
-
-repo]#  git log  --grep="change"							or 		 git log  --grep change
-		commit 842aeb930ae9691f253fb8a55dba7ac2065aa7f6
-		Author: jeffa <jeffa@example.com>
-		Date:   Wed Feb 6 21:06:39 2019 -0500
-		
-			Saving the changes to README.ME
-repo]#
-
-
-
-repo]#  git log  --graph  			<-- good to see when doing "branching"  
-
-
- 
- 
-GIT - Cloning  
--------------
- 
-repo]# cd ..
-~]# mkdir workingdir
-~]# cd workingdir
-workingdir]#
-
-
-Lets clone the repo from directory "repo]#" to new directory "workingdir]#"
-workingdir]# ll -a
-,.. nada, zippo...
-
-workingdir]# git clone ~/repo .
-		Cloning into '.'...
-		done.
-workingdir]#
-
-workingdir]# ll -a
-		drwxr-xr-x. 5 root root   84 Feb  6 22:14 .
-		dr-xr-x---. 5 root root 4096 Feb  6 22:12 ..
-		drwxr-xr-x. 8 root root 4096 Feb  6 22:14 .git
-		drwxr-xr-x. 2 root root   20 Feb  6 22:14 new
-		drwxr-xr-x. 2 root root   20 Feb  6 22:14 new1
-		-rw-r--r--. 1 root root   68 Feb  6 22:14 README.MD
-		-rw-r--r--. 1 root root   36 Feb  6 22:14 source.c
-		-rw-r--r--. 1 root root   23 Feb  6 22:14 test.txt
-workingdir]#
-
-
-
-lets do some changes in file "test.txt":
-
-workingdir]# vi test.txt
-workingdir]#
-workingdir]# git status
-		# On branch master
-		# Changes not staged for commit:
-		#   (use "git add <file>..." to update what will be committed)
-		#   (use "git checkout -- <file>..." to discard changes in working directory)
-		#
-		#       modified:   test.txt
-		#
-		no changes added to commit (use "git add" and/or "git commit -a")
-workingdir]#
-
-
-workingdir]# git config user.name "dev1"
-workingdir]# git config user.email "dev1@example.com"
-
-workingdir]# git add .
-workingdir]# git commit -m "Modified local copy of test.txt file"
-		[master eaef1a3] Modified local copy of test.txt file
-		1 file changed, 4 insertions(+)
-workingdir]#
-
-
-workingdir]# cat test.txt					<-- new file from workingdir repo, a clone of original master repo "repo"
-		This is a testing file
-		2
-		3
-		4
-		5
-workingdir]#
-
-workingdir]# cat ../repo/test.txt			<-- file from original Master repo
-		This is a testing file
-workingdir]#
-
-
-
-
-Cloning the ssh method, to a remote server:
-=========
-
-host1 <-- where current git repo directory is in " ~/workingdir/ " 
-host2 <-- where we want to clone repo to
-
-on remote server "host2" do:
-
-host2]# mkdir workingdir
-host2]# cd workingdir/
-host2 workingdir]# git clone user@host1.mylabserver.com:repo .      <-- ":repo" here will assume home dir ~/repo on host1
-
-enter password: ...
-
-
-
-Cloning with github or bitbucket method or via any other 3rd party 
-===========
-
-https://github.com/latest123/mytest   
-Created my own repo on github.com:     https://github.com/toto2000hello-world.git
-
-~]# mkdir github
-~]# cd github
-github]# Cloning into 'hello-world'...
-		remote: Enumerating objects: 3, done.
-		remote: Counting objects: 100% (3/3), done.
-		remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
-		Unpacking objects: 100% (3/3), done.
-github]# ll
-drwxr-xr-x. 3 root root 33 Feb  6 23:12 hello-world
-[root@lab1 mytest]# cd hello-world/
-
-
-
-hello-world]# ll
-		-rw-r--r--. 1 root root 48 Feb  6 23:16 README.md
-hello-world]#
-
-
-hello-world]# vi README.md			<-- make sone changes
-
-hello-world]# git status
-		# On branch master
-		# Changes not staged for commit:
-		#   (use "git add <file>..." to update what will be committed)
-		#   (use "git checkout -- <file>..." to discard changes in working directory)
-		#
-		#       modified:   README.md
-		#
-		no changes added to commit (use "git add" and/or "git commit -a")
-hello-world]#
-
-
-hello-world]# git status
-		# On branch master
-		# Changes not staged for commit:
-		#   (use "git add <file>..." to update what will be committed)
-		#   (use "git checkout -- <file>..." to discard changes in working directory)
-		#
-		#       modified:   README.md
-		#
-		no changes added to commit (use "git add" and/or "git commit -a")
-hello-world]# git commit -a
-		[master 6f1a75b] An update to the README.md file
-		1 file changed, 5 insertions(+)
-hello-world]#
-
-
-
-hello-world]# git status
-		# On branch master
-		# Your branch is ahead of 'origin/master' by 1 commit.
-		#   (use "git push" to publish your local commits)
-		#
-		nothing to commit, working directory clean
-hello-world]#
-
-
-
-hello-world]# git push origin master
-		Username for 'https://github.com': toto2000
-		Password for 'https://toto2000@github.com':
-		Counting objects: 5, done.
-		Writing objects: 100% (3/3), 305 bytes | 0 bytes/s, done.
-		Total 3 (delta 0), reused 0 (delta 0)
-		To https://github.com/toto2000hello-world.git
-		b24e806..6f1a75b  master -> master
-hello-world]#
-
-
-
-Now goto   https://github.com/toto2000/hello-world   and refresh the link,... and look at the new READM.md file !
-
-
-Create another git repo and clone the online repo from "https://github.com/toto2000/hello-world.git"
-
-workingdir]# mkdir newclone
-workingdir]# cd newclone
-newclone]# git clone https://github.com/toto2000hello-world.git
-		Cloning into 'hello-world'...
-		remote: Enumerating objects: 6, done.
-		remote: Counting objects: 100% (6/6), done.
-		remote: Compressing objects: 100% (2/2), done.
-		remote: Total 6 (delta 0), reused 3 (delta 0), pack-reused 0
-		Unpacking objects: 100% (6/6), done.
-newclone]#
-
-
-newclone]# ll
-		drwxr-xr-x. 3 root root 33 Feb  6 23:30 hello-world
-newclone]# cd hello-world/
-hello-world]# ll
-		-rw-r--r--. 1 root root 48 Feb  6 23:30 README.md
-hello-world]# cat README.md
-		# hello-world
-		Just another repository
-		1
-		2
-		3
-		4
-		5
-hello-world]#
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+We create dictionary literals by using curly braces ({ and }), separating keys 
+from values using colons (:), and separating key/value pairs using commas (,). 
+
+
+	>>> ages = {'jeff': 25, 'jane': 21, 'tom': 29}
+	>>> ages
+	{'jeff': 25, 'jane': 21, 'tom': 29}
+	>>>
+	>>> ages['tom']
+	29
+	>>> ages['kayla'] = 21
+	>>> ages
+	{'jeff': 25, 'jane': 21, 'tom': 29, 'kayla': 21}
+	>>> ages['kayla'] = 52
+	>>> ages
+	{'jeff': 25, 'jane': 21, 'tom': 51, 'kayla': 52}
+	
+	
+Remove keys with "pop" method:
+	>>> ages.pop('tom')
+	51
+	>>> ages
+	{'jeff': 25, 'jane': 21, 'kayla': 23}
+	
+	>>> ages.keys()
+	dict_keys(['jeff', 'jane', 'kayla'])
+	>>> list(ages.keys())
+	['jeff', 'jane', 'kayla']
+	
+	>>> ages.values()
+	dict_values([25, 21, 23])
+	
+	>>> list(ages.values())
+	[25, 21, 23]
+
+Using dict: 
+	>>> weights = dict(kevin=160, bob=240, kayla=135)
+	>>> weights
+	{'kevin': 160, 'bob': 240, 'kayla': 135}
+
+	>>> colors = dict([('kevin', 'blue'), ('bob', 'green'), ('kayla', 'red')])
+	>>> colors
+	{'kevin': 'blue', 'bob': 'green', 'kayla': 'red'}
+
+
+
+	
+
+Lecture: Conditionals and Comparisons
+-------------------------------------
+	
+Comparisons
+	https://docs.python.org/3/library/stdtypes.html#comparisons
+	
+if/elif/else
+	https://docs.python.org/3/tutorial/controlflow.html#if-statements
+	
+
+	
+ "if"  will always be True or False
+  
+	>>> if False:
+	...     print('was true')
+	... else:
+	...     print('was false')
+	...
+	was false
+
+	
+	>>> name = "Jefferson"
+	>>> if len(name) >= 6:
+	...     print('the name is long')					<-- first True statement so stops here!
+	... elif len(name) == 9:
+	...     print('name is 9 characters')
+	... elif len(name) >= 4:
+	...     print('name is 4 or more characters')
+	... else:
+	...     print('what a great name')
+	...
+	the name is long									<-- output
+
+
+
+	
+	
+Lecture: The 'while' Loop
+-------------------------
+
+while  for   continue / break
+
+
+
+while
+	https://docs.python.org/3/tutorial/introduction.html#first-steps-towards-programming
+	
+for
+	https://docs.python.org/3/tutorial/controlflow.html#for-statements%3CPaste%3E
+
+
+"while"  Loop	:
+	
+	>>> count = 1
+	>>> while count <= 4:
+	...     print(f'Loop #: {count}')
+	...     count += 1
+	...
+	Loop #: 1
+	Loop #: 2
+	Loop #: 3
+	Loop #: 4
+
+	
+	>>> count = 0
+	>>> while count < 10:
+	...     if count % 2 == 0:
+	...         count += 1
+	...         continue
+	...     print(f"We're counting odd numbers: {count}")
+	...     count += 1
+	...
+	We're counting odd numbers: 1
+	We're counting odd numbers: 3
+	We're counting odd numbers: 5
+	We're counting odd numbers: 7
+	We're counting odd numbers: 9
+
+
+	>>> while count < 10:
+	...     if count % 2 == 0:
+	...         break
+	...     print(f"We're counting odd numbers: {count}")
+	...     count += 1
+	...
+	We're counting odd numbers: 1
+
+	
+
+
+	
+"for"  Loop	:
+
+	>>> colors = ['blue', 'green', 'orange', 'red']
+	>>> for x in colors:
+	...     print (x)
+	...
+	blue
+	green
+	orange
+	red
+
+	>>> for x in colors:
+	...     if x == 'blue':
+	...         continue
+	...     elif x == 'red':
+	...         break
+	...     print(x)
+	...
+	green
+	orange
+
+for loop with a tuple:	
+	>>> point = (2.1, 3.2, 7.5)
+	>>> for value in point:
+	...     print(value)
+	...
+	2.1
+	3.2
+	7.5
+	>>>
+
+for loop with a dict:
+	>>> ages = dict(kevin=10, bob=20, kayla=35)
+	>>> for key in ages:
+	...     print(key)
+	...
+	kevin
+	bob
+	kayla
+
+	
+	>>> list_of_points = [(1, 2), (3, 4), (5, 6)]
+	>>> for x, y in list_of_points:
+	...     print(f"x: {x}, y: {y}")
+	...
+	x: 1, y: 2
+	x: 3, y: 4
+	x: 5, y: 6
+
+	
+	>>> for name, age in ages.items():
+	...     print(f"Person named: {name}")
+	...     print(f"Age of: {age}")
+	...
+	Person named: kevin
+	Age of: 10
+	Person named: bob
+	Age of: 20
+	Person named: kayla
+	Age of: 35
+	>>>
+	>>> ages.items()
+	dict_items([('kevin', 10), ('bob', 20), ('kayla', 35)])		<-- returned the dict from above
+	>>>
+
+	>>> for a, b in ages.items():
+	...     print(f"Person named: {a}")
+	...     print(f" is of age: {b}")
+	...
+	Person named: kevin
+	is of age: 10
+	Person named: bob
+	is of age: 20
+	Person named: kayla
+	is of age: 35
+	
+	
+	
+	
+	
+Lecture: Logic Operations
+-------------------------
+
+	not   or   and
+
+Boolean Operators:
+	https://docs.python.org/3/tutorial/introduction.html#first-steps-towards-programming
+
+
+	>>> name = ""
+	>>> not name		<-- "not" negates if it's True then answer is False and vice versa	
+	True
+
+	
+	>>> 0 or 1 or 2
+	1						with or, the first "Truethy" value is where it stops
+	
+	
+	
+	>>> first = "Jeff"
+	>>> last = None
+	>>> if first and last:							<- "and" evaluates left to rigth!
+	...      print(f"Full name: {first} {last}")
+	... elif first:
+	...     print(f"First name: {first}")
+	... elif last:
+	...     print(f"Last name: {last}")
+	...
+	First name: Jeff
+	>>>
+	>>> last = "Avendano"
+	>>> if first and last:
+	...     print(f"Full name is: {first} {last}")
+	...
+	Full name is: Jeff Avendano
+
+
+==========================================================================================================
+
+Exercise: Creating and Displaying Variables
+-------------------------------------------
+
+first_name - Set to your first name
+last_name - Set to your last name
+age - Set to your age as an integer
+birth_date - Set to your birthdate as a string
+	
+
+>>> first_name = ("Jeff")
+>>> last_name = ("Avendano")
+>>> age = 45
+>>> birth_date = ("May 10 1974")
+>>> print(f"My name is {first_name} {last_name}.\nI was born on {birth_date}, and I'm {age} years old.")
+My name is Jeff Avendano.
+I was born on May 10 1974, and I'm 45 years old.
+>>>
+
+
+Exercise: Creating and Displaying Variables
+-------------------------------------------
+
+Create a script that has a single variable you can set at the top called user. 
+This user is a dictionary containing the keys:
+
+'admin' - a boolean representing whether the user is an admin user.
+'active' - a boolean representing whether the user is currently active.
+'name' - a string that is the user.s name.
+
+ie: user = { 'admin': True, 'active': True, 'name': 'Jeff' }
+
+
+>>Using pycharm code below works fine.
+
+	C:\Users\jara\PycharmProjects\Workspace\venv\Scripts\python.exe C:/Users/jara/PycharmProjects/Workspace/venv/elif.py
+	ACTIVE - (ADMIN) Jeff
+	
+	Process finished with exit code 0
+
+>>However from REPL it gives a SyntaxError on print statement :    print(var1 + user['name'])
+
+user = { 'admin': True, 'active': True, 'name': 'Jeff' }
+var1 = ""
+if user['admin'] and user['active']:
+    var1 = "ACTIVE - (ADMIN) "
+elif user['admin']:
+    var1 = "(ADMIN) "
+elif user['active']:
+    var1 = "ACTIVE - "
+print(var1 + user['name'])
+
+
+
+Exercise: Iterating Over Lists
+------------------------------
+Building on top of the conditional exercise, write a script that will loop through a 
+list of users where each item is a user dictionary from the previous exercise printing
+out each user.s status on a separate line. Additionally, print the line number at the 
+beginning of each line, starting with line 1. Be sure to include a variety of user 
+configurations in the users list.
+
+User Keys:
+
+'admin' - a boolean representing whether the user is an admin user.
+'active' - a boolean representing whether the user is currently active.
+'name' - a string that is the user.s name.
+Depending on the values of the user, print one of the following to the screen when you run the script.
+
+Print (ADMIN) followed by the user.s name if the user is an admin.
+Print ACTIVE - followed by the user.s name if the user is active.
+Print ACTIVE - (ADMIN) followed by the user.s name if the user is an admin and active.
+Print the user.s name if neither active nor an admin.
+
+
+
+
+Working code using pyCharm:
+==========================
+
+users = [
+    { 'admin': True, 'active': True, 'name': 'Jeff' },
+    { 'admin': True, 'active': False, 'name': 'Renelle' },
+    { 'admin': False, 'active': True, 'name': 'Dave' },
+    { 'admin': False, 'active': False, 'name': 'Mike' },
+]
+
+line = 1
+
+for user in users:
+    var1 = (f"{line} ")
+
+    if user['admin'] and user['active']:
+        var1 += "ACTIVE - (ADMIN) "
+    elif user['admin']:
+        var1 += "(ADMIN) "
+    elif user['active']:
+        var1 += "ACTIVE - "
+
+    print(var1 + user['name'])
+    line += 1
+
+Output:
+======
+
+C:\Users\jara\PycharmProjects\Workspace\venv\Scripts\python.exe C:/Users/jara/PycharmProjects/Workspace/venv/elif2.py
+1 ACTIVE - (ADMIN) Jeff
+2 (ADMIN) Renelle
+3 ACTIVE - Dave
+4 Mike
+
+Process finished with exit code 0
+
+
+==========================================================================================================
+
+
+
+
+Lecture: Reading User Input
+---------------------------
+
+Input function:  https://docs.python.org/3/library/functions.html#input
+
+	input([prompt])
+
+
+$ vi age
+
+#!/usr/local/bin/python3.6
+
+name = input("What is your name? ")
+birthday = input("When is your birthday? ")
+age = int(input("How old are you? "))
+print("\n")
+
+print(f"{name} was born on {birthday}")
+print(f"Half of your age is {age / 2}")
+	
+
+$ chmod u+x age
+$ age
+What is your name? Jeff
+When is your birthday? May 10, 1966
+How old are you? 50
+
+Jeff was born on May 10, 1966
+Half of your age is 25.0
+$
+
+
+
+
+
+Lecture: Function Basics
+------------------------
+
+Defining Functions:
+	https://docs.python.org/3/tutorial/controlflow.html#defining-functions
+	
+
+We can create functions in Python using the following:
+	The def keyword
+	The function name - lowercase starting with a letter or underscore (_)
+	Left parenthesis (()
+	0 or more argument names
+	Right parenthesis ())
+	A colon :
+	An indented function body
+
+
+
+	
+Here.s an example without an argument:
+
+>>> def hello_world():
+...     print("Hello, World!")
+...
+>>> hello_world()								<-- print the function, just add the ()
+Hello, World!
+
+>>> hello_world
+<function hello_world at 0x7f909894f578>		<-- tells us that this it is a function
+>>>
+
+
+If we want to define an argument we will put the variable name 
+we want it to have within the parentheses:
+>>> def print_name(name):
+...     print(f"Name is {name}")
+...
+>>> print_name("Jeff")
+Name is Jeff
+
+
+Let.s try to assign the value from print_name to a variable:
+>>> output = print_name("Smith")
+Name is Smith
+>>> output
+>>>						<-- output alone returns None
+
+
+If we don.t explicitly declare a return value, then the result will be None.
+We can declare what we.re returning from a function using the return keyword:
+>>> def add_two(num):
+...     return num + 2
+...
+>>> result = add_two(2)
+>>> result
+4
+
+
+
+
+Lecture: Using Functions in Scripts
+-----------------------------------
+Write a script that calculates the user.s Body Mass Index (BMI).
+
+$ vi bmi.py
+#!/usr/bin/env python3.6
+... put the three pieces below together and save
+$ chmod u+x bmi.py
+$ ./bmi.py
+
+
+
+
+Formula for BMI:
+	BMI = (weight in kg / height in meters squared )
+	
+	
+step 1)	
+Gathering the Info, prompt user multiple times and package up our calls to input 
+within a single function that returns a tuple with the user given information:
+
+=======================================
+def gather_info():
+    height = float(input("What is your heigt?  (inches or meters) "))
+    weight = float(input("What is your weigt?  (pounds or kilograms) "))
+    system = input("Are your measurements in (m)etric or (i)mperial units? ").lower().strip()
+    return(height, weight, system)
+=======================================
+
+We.re converting the height and weight into float values, and we.re okay with a potential
+error if the user inputs an invalid number. For the system, we.re going to standardize 
+things by calling lower to lowercase the input and then calling strip to remove the whitespace
+from the beginning and the end.
+
+The most important thing about this function is the return statement that we added to ensure 
+that we can pass the height, weight, and system back to the caller of the function.	
+	
+	
+
+	
+step 2)
+Calculating and Printing the BMI. Once we.ve gathered the information, we need to use that 
+information to calculate the BMI. 	
+
+Return the Body Mass Index (BMI) for the given weight, height and measurement system.
+    
+=======================================
+def calc_bmi(weight, height, system='metric'):
+    if system == 'metric':
+        bmi = (weight / (height ** 2))
+    else:
+        bmi = 703 * (weight / (height ** 2))
+    return bmi
+=======================================
+	
+	
+	
+step 3)
+Setting Up The Script.s Flow. We want to be able to re-prompt the user, so we want to utilize 
+an intentional infinite loop that we can break out of. Depending on the system, we.ll determine
+how we should calculate the BMI or prompt the user again. Here.s our flow:
+
+======================================
+while True:
+    height, weight, system = gather_info()
+    if system.startswith('i'):
+        bmi = calc_bmi(weight, system=system, height=height)
+        print(f"Your BMI is {bmi}")
+        break
+    elif system.startswith('m'):
+        bmi = calc_bmi(weight, height)
+        print(f"Your BMI is {bmi}")
+        break
+    else:
+        print("Error: Unknown measurement system. Please use imperial or metric.")
+======================================
+
+
+$ ./ bmi.py
+What is your heigt?  (inches or meters) 67
+What is your weigt?  (pounds or kilograms) 200
+Are your measurements in metric or imperial units? m
+Your BMI is 0.044553352639786145
+
+
+
+
+
+
+
+
+Lecture: Using Standard Library Packages
+----------------------------------------
+
+Python Library Reference	 https://docs.python.org/3/library/index.html
+ 	    The time package 	 https://docs.python.org/3/library/time.html
