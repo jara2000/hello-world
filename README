@@ -14,11 +14,11 @@ Lecture: Setting up a Cloud Server Development Environment
 	
 	
 	Server created and credentials are:
-	      Username:	cloud_user 
+		Username:	cloud_user 
 	Temp. Password:	b64e7924db33d2b83c06 <-- changed after 1st login "su2k"
 	
 	IP Address
-		Public IPv4	54.153.19.155 	<-- this IP will change at each reboot!
+		Public IPv4		54.153.19.155 	<-- this IP will change at each reboot!
 		Private IPv4	172.31.26.155 
 				IPv6	2600:1f1c:2bf:6405:db37:4da4:f0d5:d010 
 	
@@ -26,6 +26,9 @@ Lecture: Setting up a Cloud Server Development Environment
 			jara20001c.mylabserver.com
 			jara20001d.mylabserver.com
 	
+	Auto Shutdown
+	4:55 PM
+
 
 
 
@@ -1097,7 +1100,7 @@ $ ./bmi.py
 
 Formula for BMI:
 	BMI = (weight in kg / height in meters squared )
-	
+	Imperial version:  BMI * 703
 	
 step 1)	
 Gathering the Info, prompt user multiple times and package up our calls to input 
@@ -1107,8 +1110,8 @@ within a single function that returns a tuple with the user given information:
 def gather_info():
     height = float(input("What is your heigt?  (inches or meters) "))
     weight = float(input("What is your weigt?  (pounds or kilograms) "))
-    system = input("Are your measurements in (m)etric or (i)mperial units? ").lower().strip()
-    return(height, weight, system)
+    system = input("Are your measurements in (m)etric or (i)mperial units? ").lower().strip()     # .strip will strip whitespaces
+    return(height, weight, system)								# we want a tuple here
 =======================================
 
 We.re converting the height and weight into float values, and we.re okay with a potential
@@ -1129,7 +1132,11 @@ information to calculate the BMI.
 Return the Body Mass Index (BMI) for the given weight, height and measurement system.
     
 =======================================
-def calc_bmi(weight, height, system='metric'):
+def calc_bmi(weight, height, system='metric'):		# system='xxx'   is defining a default, in this case metric
+	"""
+	Return the Body Mass Index (BMI) for the
+	given weight, height and unit of measure.
+	"""
     if system == 'metric':
         bmi = (weight / (height ** 2))
     else:
@@ -1149,11 +1156,11 @@ while True:
     height, weight, system = gather_info()
     if system.startswith('i'):
         bmi = calc_bmi(weight, system=system, height=height)
-        print(f"Your BMI is {bmi}")
+        print(f"Your BMI (using the imperial system) is {bmi}")
         break
     elif system.startswith('m'):
         bmi = calc_bmi(weight, height)
-        print(f"Your BMI is {bmi}")
+        print(f"Your BMI (using the metric system) is {bmi}")
         break
     else:
         print("Error: Unknown measurement system. Please use imperial or metric.")
@@ -1164,9 +1171,7 @@ $ ./ bmi.py
 What is your heigt?  (inches or meters) 67
 What is your weigt?  (pounds or kilograms) 200
 Are your measurements in metric or imperial units? m
-Your BMI is 0.044553352639786145
-
-
+Your BMI (using the metric system) is 0.044553352639786145
 
 
 
@@ -1177,4 +1182,340 @@ Lecture: Using Standard Library Packages
 ----------------------------------------
 
 Python Library Reference	 https://docs.python.org/3/library/index.html
- 	    The time package 	 https://docs.python.org/3/library/time.html
+. 	    The time package 	 https://docs.python.org/3/library/time.html
+
+A package is an object. 
+So the "Time" package is an object.
+
+Importing a package allows us to access functions and classes that it defines.
+
+
+Let's import library package "time" and call the "localtime" function (and its attributes) provided by the time package.
+
+>>> import time
+>>> now = time.localtime()	   # see time function list ->  https://docs.python.org/3/library/time.html
+>>> now
+time.struct_time(tm_year=2019, tm_mon=3, tm_mday=10, tm_hour=18, tm_min=20, tm_sec=19, tm_wday=6, tm_yday=69, tm_isdst=1)
+>>>
+>>> now.tm_hour
+18
+>>> now.tm_year
+2019
+
+	"time.struct_time" above is a type "object" and inside the brackets are the "attributes" of said object.
+	Note: A methods is an attribute on an object
+
+
+
+Here is a small stopwatch program that uses the package "time":
+
+$ cat timer
+#!/usr/bin/env python3.6
+
+import time		# see https://docs.python.org/3/library/time.html
+
+start_time = time.localtime()	# we get the local time
+#print(f"Timer started at {time.strftime('%X', start_time)}")	# we show what that time is
+print(f"Timer started on {time.strftime('%A, %b %d %Y at %H:%M', start_time)}")	# we show what that time is
+
+#Wait for user to stop timer
+input("Press 'Enter' to stop timer ")
+
+stop_time = time.localtime()	# we get the local stop time
+difference = time.mktime(stop_time) - time.mktime(start_time)	# we calculate the floating point values and make the subtraction
+
+#print(f"Timer stopped at {time.strftime('%X', stop_time)}")
+print(f"Timer stopped on {time.strftime('%A, %b %d %Y at %H:%M', stop_time)}")
+print(f"Total time:  {difference} seconds")
+
+
+	We can be selective of which functions we want to use, here we called 
+	3 different functions of package "time" :  localtime, mktime, strftime
+	
+	We can import only those three functions:  
+	
+	You can therefore replace line:
+	import time	
+		
+	with :
+	from time import localtime, mktime, strftime 
+	
+		and remove all the "time." references! this allows us to only import what is needed.
+
+$ cat timer2
+#!/usr/bin/env python3.6
+
+from time import localtime, mktime, strftime
+
+start_time = localtime()	# we get the local time
+#print(f"Timer started at {strftime('%X', start_time)}")	# we show what that time is
+print(f"Timer started on {strftime('%A, %b %d %Y at %H:%M', start_time)}")	# we show what that time is
+
+#Wait for user to stop timer
+input("Press 'Enter' to stop timer ")
+
+stop_time = localtime()	# we get the local stop time
+difference = mktime(stop_time) - mktime(start_time)	# we calculate the floating point values and make the subtraction
+
+#print(f"Timer stopped at {strftime('%X', stop_time)}")
+print(f"Timer stopped on {strftime('%A, %b %d %Y at %H:%M', stop_time)}")
+print(f"Total time:  {difference} seconds")
+
+
+outputs:
+	~ $ ./timer2
+	Timer started on Sunday, Mar 10 2019 at 20:10
+	Press 'Enter' to stop timer
+	Timer stopped on Sunday, Mar 10 2019 at 20:10
+	Total time:  12.0 seconds
+	~ $
+	
+	~ $ ./timer
+	Timer started on Sunday, Mar 10 2019 at 20:10
+	Press 'Enter' to stop timer
+	Timer stopped on Sunday, Mar 10 2019 at 20:11
+	Total time:  35.0 seconds
+	~ $
+
+
+
+
+	
+	
+
+
+
+	
+
+Lecture: Working with Environment Variables
+-------------------------------------------
+
+Packages in this lecture:
+	The os package				https://docs.python.org/3/library/os.html
+	The os.environ attribute	https://docs.python.org/3/library/os.html#os.environ 
+	The os.getenv function		https://docs.python.org/3/library/os.html#os.getenv 
+
+
+A common way to configure a script or CLI is to use environment variables. 
+Learn how to access environment variables from inside of a Python scripts.
+
+Since I'm in my home directory let's add this path to my $PATH variable:
+
+$ export PATH=${PATH}:/~:
+
+
+$ vi running
+#!/usr/bin/env python3.6
+
+import os
+
+stage = os.environ["STAGE"].upper()
+
+output = f"We're running in {stage}"
+
+if stage.startswith("PROD"):
+    output = "Danger!!! - " + output
+
+print(output)
+
+
+
+outputs:
+$ STAGE=staging running		
+	We're running in STAGING
+	$
+	$ STAGE=production running
+	Danger!!! - We're running in PRODUCTION
+	
+	
+	!! However, the problem is if an environment variable is not set we run into this problem:
+	$ running
+	Traceback (most recent call last):
+	File "./running", line 5, in <module>
+		stage = os.environ["STAGE"].upper()
+	File "/usr/local/lib/python3.6/os.py", line 669, in __getitem__
+		raise KeyError(key) from None
+	KeyError: 'STAGE'
+$
+
+
+So let's set the varaible to a default 
+
+$ cat running
+#!/usr/bin/env python3.6
+
+import os
+
+stage = os.getenv("STAGE", default="dev").upper()		<-- changed this line, to function "getenv" and a default catch all!
+
+output = f"We're running in {stage}"
+
+if stage.startswith("PROD"):
+    output = "Danger!!! - " + output
+
+print(output)
+
+
+
+outputs:
+	$ running
+	We're running in DEV
+	$
+	$ STAGE=production running
+	Danger!!! - We're running in PRODUCTION
+	$
+	
+
+
+
+
+
+
+
+
+
+Lecture: Interacting with Files
+-------------------------------
+
+The open function	https://docs.python.org/3/library/functions.html#open
+The file-object		https://docs.python.org/3/glossary.html#term-file-object
+The io module		https://docs.python.org/3/library/io.html#io-overview
+
+
+Interacting with Files:
+It.s common to need to read the contents of a file in a script. 
+Python makes that easy for us. 
+
+$ cat xmen_base.txt
+Storm
+Wolverine
+Cyclops
+Bishop
+Nightcrawler
+
+
+
+Opening and Reading a File
+<><><><><><><><><><><><><>
+
+>>> xmen_file = open('xmen_base.txt', 'r')			<-- open file in read mode and pass it to var xmen_file 
+>>> xmen_file
+<_io.TextIOWrapper name='xmen_base.txt' mode='r' encoding='UTF-8'>
+>>>
+
+The read function:
+>>> xmen_file.read()
+'Storm\nWolverine\nCyclops\nBishop\nNightcrawler\n'
+>>> xmen_file.read()
+''						<--  it gave us an empty string when we called the function a second time.
+>>>						 That's because the file maintains a cursor position and when we first
+						 called read the cursor was moved to the very end of the file.s contents. 
+						 If we want to reread the file we.ll need to move the beginning of the 
+.						 file using the "seek" function like so:
+
+>>> xmen_file.seek(0)
+0
+>>> xmen_file.read()
+'Storm\nWolverine\nCyclops\nBishop\nNightcrawler\n'
+>>>
+>>> xmen_file.seek(6)			<-- start at index position 6
+6
+>>> xmen_file.read()
+'Wolverine\nCyclops\nBishop\nNightcrawler\n'
+>>>
+
+
+Try a for loop:
+>>> xmen_file.seek(0)
+0
+>>> for line in xmen_file:				<-- don't forget we did -> xmen_file = open('xmen_base.txt', 'r') <- above..
+...     print(line, end="")				<-- added a custom end because of the newline characters (\n) in each line.
+...
+Storm
+Wolverine
+Cyclops
+Bishop
+Nightcrawler
+>>>
+
+
+Once we.re finished working with a file, it is important that we 
+close our connection to the file using the "close" function:
+
+>>> xmen_file.close()					<-- file is now closed!
+>>> xmen_file.read()					<-- sowe can't read it!!
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ValueError: I/O operation on closed file.
+>>>
+
+
+
+Creating a New File and Writing to It
+<><><><><><><><><><><><><><><><><><><>
+
+Create a copy of the  xmen_file.txt  then add additional content to it:
+
+>>> xmen_base = open('xmen_base.txt')			<-- open the existing file "xmen_base.txt" from before 
+>>> new_xmen = open('new_xmen.txt', 'w')		<-- creates a new file named "new_xmen.txt"  with 'w'rite mode.
+
+>>> new_xmen.write(xmen_base.read())			<-- read from the base file and use the return value as the argument to write for our new file
+>>> new_xmen.close()					<-- close the new file
+>>> new_xmen = open(new_xmen.name, 'r+')		<-- reopen new file, using the r+ mode, this allows to read and write content to the file
+>>> new_xmen.read()					<-- read the content from the new file
+'Storm\nWolverine\nCyclops\nBishop\nNightcrawler\n'
+>>>
+
+
+Now that we have a file that we can read and write from let.s add some more names:
+
+>>> new_xmen.seek(0)						<-- position yourself back at index 0 
+0
+>>> new_xmen.write("Beast\n")					<-- add new name "Beast\n"
+6
+>>> new_xmen.write("Phoenix\n")					<-- add another new name "Phoenix\n"
+8
+>>> new_xmen.seek(0)						<-- position yourself back at index 0
+0
+>>> new_xmen.read()						<-- and read content of file
+'Beast\nPhoenix\ne\nCyclops\nBishop\nNightcrawler\n'  <-- because of the r+ we are overwriting the file on a per character   
+.               ^^					  basis since we used seek to go back to the beginning of the file
+.							  If we reopen the file in the w mode, the pre-existing contents 
+.							  will be truncated.
+
+
+Appending to a File
+<><><><><><><><><><>
+
+Often we want to append to a file without reading its current contents. 
+This can be done with the "a" mode.
+
+Let.s close the xmen_base.txt file and reopen it in the a mode to add 
+another name without worrying about losing our original content. 
+
+>>> xmen_base.close()
+
+This time, we.re going to use the with statement to temporarily open the
+file and have it automatically closed after our code block has executed:
+
+>>> with open('xmen_base.txt', 'a') as f:
+...     f.write('Professor Xavier\n')			<-- append 17 characters
+...
+17
+>>> f = open('xmen_base.txt', 'a')
+>>> with f:
+...     f.write("Something\n")				<-- added 10 new characters
+...
+10
+>>> exit()
+
+
+$ cat xmen_base.txt					<-- let's check the file 
+Storm
+Wolverine
+Cyclops
+Bishop
+Nightcrawler
+Professor Xavier				<-- the 17 new chars appended
+Something					<-- the 10 new chars appended
+
